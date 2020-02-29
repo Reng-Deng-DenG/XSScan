@@ -9,7 +9,7 @@ try:
 	driver = webdriver.PhantomJS("C:\\Users\\lucas-pc\\Desktop\\phantomjs.exe");# Connexion au driver + emplacement du driver
 except WebDriverException as exception:
 	print('[!] Impossible de se connecter au driver');
-	print('Vérifier l\'emplacement du chemin du driver :');
+	print('Vérifier l\'emplacement du chemin du driver');
 	exit();
 
 '''Fonction qui retourne TRUE si une URL fournit provoque une redirection'''
