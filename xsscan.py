@@ -1,133 +1,135 @@
+
 from selenium import webdriver
 from selenium.common.exceptions import *
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
+from lib.function import inject
 import warnings
-warnings.filterwarnings('ignore')# On caches les avertisements 
+warnings.filterwarnings('ignore')
 
+# Connexion au driver + emplacement du fichier
+# Lien de téléchargement du driver https://phantomjs.org/download.html
 try:
-	driver = webdriver.PhantomJS("C:\\Users\\lucas-pc\\Desktop\\phantomjs.exe");# Connexion au driver + emplacement du driver
+	driver = webdriver.PhantomJS("C:\\Users\\lucas-pc\\Desktop\\XSScan\\phantomjs.exe");
 except WebDriverException as exception:
 	print('[!] Impossible de se connecter au driver');
-	print('Vérifier l\'emplacement du chemin du driver');
+	print('[?] Vérifier l\'emplacement du chemin du driver');
 	exit();
 
-'''Fonction qui retourne TRUE si une URL fournit provoque une redirection'''
+# Fonction qui retourne True si une url est vulnérable à la faille XSS
 def xss(URL):
-
 	driver.get(URL);# Connexion à l'url
 	page = driver.page_source;# On récupére le corp de la page
 	if '1ts+Vu1nerab1e!' in page: # Si le mot-clée est trouver dans la page alors c'est vulnérable
 		return True;
 	else:
 		return False;
+# Fonction pour iniatialiser des cookies
+# /!\ En cour de test /!\
+def init_cookie(url):
 
+	urlparsed = urlparse(url)# On parse l'url pour récupérer ses composants
 
-'''fonction qui permet de injecter un payload dans chaque paramètres d'une URL en conversant leurs valeur d'origine
-Retourne une liste avec les URL prêt à être passer dans un fuzzeur'''
+	domain = urlparsed.netloc# Récupération du domain 
 
-def inject(URL, PAYLOAD):
+	if 'www' in domain:
+		domain.replace('www', '.')# On remplace www par un point, se qui donne (.domain.com) 
+	else:
+		domain = '.' + domain# On ajoute un point, se qui donne (.domain.com)
 
-	output = urlparse(URL);# Création d'un object urlparse
+	cookie_name = input('[?] Nom de la cookie (ex: PHPSESSID) : ')
+	cookie_name = cookie_name.strip()
+	cookie_value = input('[?] Valeur de la cookie (ex: 0j69jtouvjhf8) : ')
+	cookie_value = cookie_value.strip()
+	cookie_items = []
 
-	valid = False
+	cookie_items.append(domain)# Ajout du domaine
+	cookie_items.append(cookie_name)# Ajout du nom de la cookie
+	cookie_items.append(cookie_value)# Ajout de la valeur du cookie
 
-	
-	if output[4] == "": # On Vérifie si y a bien un query dans l'URL
-		print("URL invalid !")
-		exit();
-		
+	domain = urlparsed.scheme + '://' + urlparsed.netloc# Création de l'url pour iniatialiser les cookies
 
-	ParameterAndValue = parse_qs(output.query, keep_blank_values=0);#Création d'un dico avec Para et Value
+	driver.get(domain)# Connexion au domain
+	driver.delete_all_cookies()# Suppresion des cookies qui sont prêt à être chargées
+	driver.add_cookie({'domain': cookie_items[0], 'name': cookie_items[1],'value': cookie_items[2], 'path': '/','expires': None})# Ajout des cookies
+	driver.get(url);
 
-	Parameter = [];
-	Value = [];
-	ValueCopy =  [];
-
-	for p in ParameterAndValue:# Récupération de tout les paramètres
-		Parameter.append(p);
-
-	for v in ParameterAndValue.values():# Récupération de tout les valeurs des paramètres
-		Value.append(''.join(v));
-		ValueCopy.append(''.join(v));# Création d'une copy de Value
-
-	RealURL = output.scheme+"://"+output.netloc+output.path+"?"; # Reconstitution de l'URL (http+hôte+chemin)
-
-	ListQuery = [] # Création d'un liste avec tout les paramètres et les valeurs
-
-	# Configuration pour la boucle
-	NemberOfQuery = len(Value)
-	i = 0
-
-	# Création de la liste
-	while i < NemberOfQuery:
-		ListQuery.append(Parameter[i])
-		ListQuery.append("=")
-		ListQuery.append(Value[i])
-		ListQuery.append("&")
-		i += 1
-
-	del ListQuery[-1] # Netoyage de la liste
-
-	# Configuration pour la boucle
-	i = 2
-	x = 0
-
-	Result = [];
-
-	while i < len(ListQuery):
-	# Injection du payload
-		ListQuery[i] = PAYLOAD
-
-		# Création de l'URL pret à être injecter
-		FinalQuery = RealURL + ''.join(ListQuery)
-		# On stocke les URLs dans un tableaux qui seras retourner par notre fonction
-		Result.append(FinalQuery)
-		# Après l'injection on remet la valeur d'origine
-		ListQuery[i] = ValueCopy[x]
-		i += 4
-		x += 1
-
-	return Result
 
 banner = """
  __  __  ___   ___                    
  \ \/ / / __| / __|  __   __ _   _ _  
   >  <  \__ \ \__ \ / _| / _` | | ' \ 
  /_/\_\ |___/ |___/ \__| \__,_| |_||_|
-                                                 
- """
+
+
+Mise à jour :
+Plus de payload, possibilité d'ajouter via le fichier txt 
+Vous pouvez scanner plusieurs urls à la suite sans que le web driver se recharge
+Possibilité d'ajouter des cookies (en cours de test)
+
+
+
+Mise à jour à venir :
+Ajout de couleur
+Plusieurs vérification pour faciliter l'installation
+
+"""
 print(banner)
 
 
-URL = input('[?] URL : ')
-AllURL = inject(URL , '"><svg/onload=location.href="http://fuzzme.org/detect.html">')
-for u in AllURL:
-	if xss(u):
-		print(u, ' => Vulnérable à la faille XSS')
-	else:
-		print(u, ' => N\' est pas vulnérable')
+def xsscan():
 
-Again = True
+	valid_url = False
+	message = "[!] L'url est invalide"
 
-
-while Again == True:
-	Choice = input('Voulez vous encore scanner des URLs (y/n) ? ')
-
-	if Choice == 'y':
-		Again = True
-	elif Choice == 'n':
-		Again = False
-		print('Bye-Bye')
-		exit();
-	else:
-		print("Choix invalide")
-		exit();
-
-	URL = input('[?] URL : ')
-	AllURL = inject(URL , '"><svg/onload=location.href="http://fuzzme.org/detect.html">')
-	for u in AllURL:
-		if xss(u):
-			print(u, ' => Vulnérable à la faille XSS')
+	# Vérification de l'url
+	while valid_url == False:
+		url = input('[?] URL : ')
+		urlparsed = urlparse(url)# On parse l'url pour récupérer ses composants
+		if urlparsed.scheme == '':# Vérification si le protocole est bien déclarer dans l'url
+			valid_url = False
+			print(message)
+		elif urlparsed.netloc == '':# Vérification si l'hôte et bien déclarer dans l'url
+			valid_url = False
+			print(message)
+		elif urlparsed.query == '':# Vérification si le l'url à des paramètres et des valeurs
+			valid_url = False
+			print(message)
 		else:
-			print(u, ' => N\' est pas vulnérable')
+			valid_url = True
+
+	choice = input('[?] Voulez vous ajouter des cookies [en cours de test] (y/n) : ')
+	if 'y' in choice:
+		init_cookie(url)
+
+	# Récupération des payloads le fichier txt
+	try:
+		file = open('payload.txt', 'r')
+		payload = file.readlines()
+		file.close()
+	except FileNotFoundError:
+		print("[WARNING] Imposible d'ouvrire le fichier qui contient les payloads")
+		exit();
+
+	# Affichage
+	print('\n')
+	print('[+]', len(payload), 'payloads chargées')
+	print('[+] Fuzzing pour : ', url,'\n')
+
+	for p in payload:
+		allurl = inject(url, p)# Injection des payloads dans l'url
+		for u in allurl:# Injection des urls dans le fuzzeur
+			if xss(u):
+				print('[!]', u, 'XSS Found !\n')
+			else:
+				print('[*]', u, 'Is Safe\n')
+
+	question = input('[?] Do you want continue scanning ? (y/n) : ')
+
+	if question == 'y':
+		xsscan()
+	else:
+		print('Bye-bye')
+		exit();
+	
+xsscan()
