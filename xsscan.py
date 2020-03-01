@@ -1,4 +1,4 @@
-
+#coding:utf-8
 from selenium import webdriver
 from selenium.common.exceptions import *
 from urllib.parse import urlparse
