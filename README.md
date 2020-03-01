@@ -2,7 +2,7 @@ XSScan
 
 Un simple scanneur de faille XSS réfléchie (GET)
 __________________________________________________________________________________
-Mise à jour :
+Mise à jour :\n
 Plus de payload, possibilité d'ajouter via le fichier txt 
 Vous pouvez scanner plusieurs urls à la suite sans que le web driver se recharge
 Possibilité d'ajouter des cookies (en cours de test)
@@ -23,4 +23,4 @@ Veuillez Télécharger phantomJS https://phantomjs.org/download.html
 
 Discord : https://discord.gg/k8MSz8Z
 
-![alt tag](https://raw.githubusercontent.com/reng-deng-deng/XSScan/master/xss.PNG)
+![alt tag](/Reng-Deng-DenG/XSScan/blob/master/xsscan.PNG?raw=true)
