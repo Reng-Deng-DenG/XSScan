@@ -23,4 +23,4 @@ Veuillez Télécharger phantomJS https://phantomjs.org/download.html
 
 Discord : https://discord.gg/k8MSz8Z
 
-![alt tag](/Reng-Deng-DenG/XSScan/blob/master/xsscan.PNG?raw=true)
+![alt tag](https://github.com/Reng-Deng-DenG/XSScan/blob/master/xsscan.PNG?raw=true)
