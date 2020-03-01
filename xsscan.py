@@ -4,16 +4,22 @@ from selenium.common.exceptions import *
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
 from lib.function import inject
+import os
 import warnings
+from colorama import init
+from colorama import Fore, Back, Style
 warnings.filterwarnings('ignore')
+init()
+
+print(Style.BRIGHT)# On met le style en brillant
 
 # Connexion au driver + emplacement du fichier
 # Lien de téléchargement du driver https://phantomjs.org/download.html
 try:
 	driver = webdriver.PhantomJS("C:\\Users\\lucas-pc\\Desktop\\XSScan\\phantomjs.exe");
 except WebDriverException as exception:
-	print('[!] Impossible de se connecter au driver');
-	print('[?] Vérifier l\'emplacement du chemin du driver');
+	print(Fore.RED+ '[!] Impossible de se connecter au driver' + Fore.RESET);
+	print(Fore.YELLOW +'[?] Vérifier l\'emplacement du chemin du driver' + Fore.RESET);
 	exit();
 
 # Fonction qui retourne True si une url est vulnérable à la faille XSS
@@ -74,13 +80,13 @@ Ajout de couleur
 Plusieurs vérification pour faciliter l'installation
 
 """
-print(banner)
+print(Fore.GREEN + banner + Fore.RESET)
 
 
 def xsscan():
 
 	valid_url = False
-	message = "[!] L'url est invalide"
+	message = Fore.RED + "[!]  L'URL est invalide" + Fore.RESET
 
 	# Vérification de l'url
 	while valid_url == False:
@@ -120,9 +126,9 @@ def xsscan():
 		allurl = inject(url, p)# Injection des payloads dans l'url
 		for u in allurl:# Injection des urls dans le fuzzeur
 			if xss(u):
-				print('[!]', u, 'XSS Found !\n')
+				print('[!]', u,  Fore.RED, 'XSS Found !\n', Fore.RESET)
 			else:
-				print('[*]', u, 'Is Safe\n')
+				print('[*]', u, Fore.GREEN, 'Is Safe\n', Fore.RESET)
 
 	question = input('[?] Do you want continue scanning ? (y/n) : ')
 
@@ -133,3 +139,7 @@ def xsscan():
 		exit();
 	
 xsscan()
+
+
+
+
