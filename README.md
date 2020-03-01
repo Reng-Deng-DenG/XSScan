@@ -22,3 +22,5 @@ Installation :
 Veuillez Télécharger phantomJS https://phantomjs.org/download.html
 
 Discord : https://discord.gg/k8MSz8Z
+
+![alt tag](https://raw.githubusercontent.com/reng-deng-deng/XSScan/master/xss.PNG)
