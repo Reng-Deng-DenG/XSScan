@@ -58,6 +58,8 @@ driver = webdriver.Chrome(executable_path="C:\\\Users\\\lucas-pc\\\Desktop\\\XSS
 - python xsscan.py
 
 
+![alt text](https://github.com/Reng-Deng-DenG/XSScan/blob/master/XSScan.py.png?raw=trueg)
+
 
 
 
