@@ -14,8 +14,8 @@ Linux Installation
 
 1) Download and install google chrome
 
-sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-sudo apt install ./google-chrome-stable_current_amd64.deb
+~ sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+~ sudo apt install ./google-chrome-stable_current_amd64.deb
 
 2) Download XSScan
 
