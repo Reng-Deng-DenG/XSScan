@@ -1,14 +1,16 @@
 XSScan
 
 XSScan is a simple XSS scanner reflected
-
+-------------------------------------------------------------------------------------
 Compatibility Linux && Windows
-
+-------------------------------------------------------------------------------------
 Requirements :
 
 - Python3
 - Python3 modules : regex, colorama, seleniuù 
 - chromedriver
+
+-------------------------------------------------------------------------------------
 
 Linux Installation
 
@@ -38,6 +40,7 @@ driver = webdriver.Chrome(executable_path="/usr/bin/chromedriver", options=chrom
 
 - sudo python3 xsscan.py
 
+-------------------------------------------------------------------------------------
 
 Windows installation
 
