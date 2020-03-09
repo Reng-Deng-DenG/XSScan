@@ -2,16 +2,20 @@ from urllib.request import *
 import urllib.error
 from urllib.parse import urlparse, parse_qs
 
-# Retourne le code http reponse d'un url
+# Retourne le code http reponse d'une url
 def get_code(url):
 
 	reponse_code = ''
+	user_agent = 'Mozilla/5.0 (Windows NT 6.2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1464.0 Safari/537.36'
+
+	request = Request(url, headers={'User-Agent': user_agent})
+
 	try:
-		r = urlopen(url)
+		response = urlopen(request)
 	except urllib.error.HTTPError as e:
-		reponse_code = e.code
+		reponse_code = str(e.code)
 	else:
-		reponse_code = r.getcode()
+		reponse_code = str(response.getcode())
 
 	return reponse_code
 
