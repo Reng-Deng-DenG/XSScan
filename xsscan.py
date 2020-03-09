@@ -7,6 +7,7 @@ import time
 from lib.function import *
 from colorama import init
 from colorama import Fore, Back, Style
+import re
 init()
 
 print(Style.BRIGHT)# On met le style en brillant
