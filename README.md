@@ -59,7 +59,7 @@ driver = webdriver.Chrome(executable_path="C:\\\Users\\\lucas-pc\\\Desktop\\\XSS
 
 
 ![alt text](https://github.com/Reng-Deng-DenG/XSScan/blob/master/XSScan.py.png?raw=trueg)
-
+![alt text](https://github.com/Reng-Deng-DenG/XSScan/blob/master/XSScan.py2.png?raw=trueg)
 
 
 
