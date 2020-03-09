@@ -8,7 +8,7 @@ Compatibility Linux && Windows
 Requirements :
 
 - Python3
-- Python3 modules : regex, colorama, seleniuù 
+- Python3 modules : regex, colorama, selenium
 - chromedriver
 -------------------------------------------------------------------------------------
 
