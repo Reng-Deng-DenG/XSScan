@@ -5,7 +5,11 @@ import warnings
 warnings.filterwarnings('ignore')
 import time
 from lib.function import *
-from urllib.parse import urlencode
+from colorama import init
+from colorama import Fore, Back, Style
+init()
+
+print(Style.BRIGHT)# On met le style en brillant
 
 # Options de chrome
 chrome_options = Options()
@@ -23,8 +27,8 @@ chrome_options.add_experimental_option('excludeSwitches',['enable-logging']);# S
 try:
 	driver = webdriver.Chrome(executable_path="C:\\Users\\lucas-pc\\Desktop\\chromedriver.exe", options=chrome_options)
 except WebDriverException as exception:
-	print('[!] Unable to connect to the webdriver ! ')
-	print('[?] Verify your web driver path')
+	print(Fore.RED + '[!] Unable to connect to the webdriver ! ' + Fore.RESET)
+	print(Fore.YELLOW +'[?] Verify your web driver path' + Fore.RESET)
 	exit();
 
 # Fonction qui retourne True si une url est vulnérable à la faille XSS
@@ -100,113 +104,149 @@ banner = """
  __  __  ___   ___                    
  \ \/ / / __| / __|  __   __ _   _ _  
   >  <  \__ \ \__ \ / _| / _` | | ' \ 
- /_/\_\ |___/ |___/ \__| \__,_| |_||_|
+ /_/\_\ |___/ |___/ \__| \__,_| |_||_| 
 
 
 """
-print(banner)
+print(Fore.GREEN + banner + Fore.RESET)
 
-# 
-# Méthode Manuel
-#
-def manually_scan(url):
+def xsscan():
 
-	payload = get_payload()# Récupération des payloads
 
-	# Affichage
-	print('\n')
-	print('[+] {} Payloads Loaded '.format(len(payload)))
-	print('\n')
+	# 
+	# Méthode Manuel
+	#
+	def manually_scan(url):
 
-	for p in payload:
-
-		p = p.replace('\n', '')# Netoyage de la list
-		url = url.replace('<xss>', p)# On replace <xss> par un payload
-		code = get_code(url)# Récupéraion du code réponse de la requête
-		vuln = xss(url)# Fuzzing
+		payload = get_payload()# Récupération des payloads
 
 		# Affichage
-		if vuln == True:
-			print('[XSS FOUND] [{}] {}'.format(code, url))
-		else :
-			print('[{}] {}'.format(code, url))
+		print('\n')
+		print('[+] {} Payloads Loaded '.format(len(payload)))
+		print('\n')
 
+		for p in payload:
 
-		url = url.replace(p, '<xss>')# On remet l'url à sa valeur d'origine
-
-
-
-#
-# Méthode Automatique
-#
-def auto_scan(url):
-
-	payload = get_payload()# Récupération des payloads
-
-	# Affichage
-	print('\n')
-	print('[+] {} Payloads Loaded '.format(len(payload)))
-	print('\n')
-
-	for p in payload:
-
-		p = p.replace('\n', '')# Netoyage de la liste
-		all_url = inject(url, p)# Injection des payload dans les paramètre
-
-		for u in all_url:# Récupération des urls
-
+			p = p.replace('\n', '')# Netoyage de la list
+			url = url.replace('<xss>', p)# On replace <xss> par un payload
 			code = get_code(url)# Récupéraion du code réponse de la requête
-			vuln = xss(u)# Fuzzing
+			vuln = xss(url)# Fuzzing
 
-			if vuln == True:
-				print('[XSS FOUND] [{}] {}'.format(code, u))
+			if re.search(r'^3', code) is not None or re.search(r'^2', code) is not None:# Vérification du code http réponse
+
+				if vuln == True:# Vérification si l'url est vulnérable
+					print('[', Fore.RED +  'XSS' +  Fore.RESET, '] [', Fore.GREEN + code + Fore.RESET, ']', url)
+				else:
+					print('[', Fore.CYAN +  'SAFE' +  Fore.RESET, '] [', Fore.GREEN + code + Fore.RESET, ']', url)
+			
 			else:
-				print('[{}] {}'.format(code, u))
+				if vuln == True:
+					print('[', Fore.RED +  'XSS FOUND' +  Fore.RESET, '] [', Fore.RED + code + Fore.RESET, ']', url)
+				else:
+					print('[', Fore.CYAN +  'SAFE' +  Fore.RESET, '] [', Fore.RED + code + Fore.RESET, ']', url)
 
-#
-# Menu Départ
-#
-choice = input('[?] [M]anually adding payload or [A]uto : ')# On demande quel méthode l'utilisateur veut utiliser
 
-if choice == 'm' or choice == 'M':
-	print('[~] For this method you need to specify the key-word <xss> into the url')
-	url = input('[?] Enter URL : ')
+			url = url.replace(p, '<xss>')# On remet l'url à sa valeur d'origine
 
-	valid_url = verify_url_with_a_keyword(url)# Vérification de l'url
+	#
+	# Méthode Automatique
+	#
+	def auto_scan(url):
 
-	while valid_url == False:
+		payload = get_payload()# Récupération des payloads
+
+		# Affichage
+		print('\n')
+		print('[+] {} Payloads Loaded '.format(len(payload)))
+		print('\n')
+
+		for p in payload:
+
+			p = p.replace('\n', '')# Netoyage de la liste
+			all_url = inject(url, p)# Injection des payload dans les paramètre
+
+			for u in all_url:# Récupération des urls
+
+				code = get_code(url)# Récupéraion du code réponse de la requête
+				vuln = xss(u)# Fuzzing
+
+				if re.search(r'^3', code) is not None or re.search(r'^2', code) is not None:# Vérification du code http réponse
+
+					if vuln == True:# Vérification si l'url est vulnérable
+						print('[', Fore.RED +  'XSS' +  Fore.RESET, '] [', Fore.GREEN + code + Fore.RESET, ']', u)
+					else:
+						print('[', Fore.CYAN +  'SAFE' +  Fore.RESET, '] [', Fore.GREEN + code + Fore.RESET, ']', u)
+			
+				else:
+					if vuln == True:
+						print('[', Fore.RED +  'XSS FOUND' +  Fore.RESET, '] [', Fore.RED + code + Fore.RESET, ']', u)
+					else:
+						print('[', Fore.CYAN +  'SAFE' +  Fore.RESET, '] [', Fore.RED + code + Fore.RESET, ']', u)
+
+	#
+	# Menu Départ
+	#
+	choice = input('[?] [M]anually adding payload or [A]uto : ')# On demande quel méthode l'utilisateur veut utiliser
+
+	if choice == 'm' or choice == 'M':
+		print('[~] For this method you need to specify the key-word <xss> into the url')
 		url = input('[?] Enter URL : ')
-		valid_url = verify_url_with_a_keyword(url)
+
+		valid_url = verify_url_with_a_keyword(url)# Vérification de l'url
+
+		while valid_url == False:
+			url = input('[?] Enter URL : ')
+			valid_url = verify_url_with_a_keyword(url)
 
 
-	if valid_url == True:
+		if valid_url == True:
 
-		choice = input('[?] Do you want add cookies ? (y/n) : ')# On demande si l'utilisateur veut ajouter des cookies
+			choice = input('[?] Do you want add cookies ? (y/n) : ')# On demande si l'utilisateur veut ajouter des cookies
 
-		if choice == 'y' or choice == 'Y':# Si oui
-			init_cookie(url)# On initialise les cookies
+			if choice == 'y' or choice == 'Y':# Si oui
+				init_cookie(url)# On initialise les cookies
 
-		manually_scan(url)
+			manually_scan(url)
 
-elif choice == "a" or choice == 'A':
-	print('[~] For this method you need a valid url like this http://x.com/?q=john')
-	url = input('[?] Enter URL : ')
+			print('\n')
+			question = input('[?] Do you want continue scanning ? (y/n) : ')
+			print('\n')
 
-	valid_url = verify_url_with_query_valid(url)
+			if question == 'y':
+				xsscan()
+			else:
+				print('Bye-bye')
+				exit();
 
-	while valid_url == False:
+	elif choice == "a" or choice == 'A':
+		print('[~] For this method you need a valid url like this http://x.com/?q=john')
 		url = input('[?] Enter URL : ')
+
 		valid_url = verify_url_with_query_valid(url)
 
-	if valid_url == True:
+		while valid_url == False:
+			url = input('[?] Enter URL : ')
+			valid_url = verify_url_with_query_valid(url)
 
-		choice = input('[?] Do you want add cookies ? (y/n) : ')
+		if valid_url == True:
 
-		if choice == 'y' or choice == 'Y':
-			init_cookie(url)
+			choice = input('[?] Do you want add cookies ? (y/n) : ')
 
-		auto_scan(url)
-else:
-	exit()
+			if choice == 'y' or choice == 'Y':
+				init_cookie(url)
 
+			auto_scan(url)
 
+			print('\n')
+			question = input('[?] Do you want continue scanning ? (y/n) : ')
+			print('\n')
+
+			if question == 'y':
+				xsscan()
+			else:
+				print('Bye-bye')
+				exit();
+	else:
+		exit();
+
+xsscan()
