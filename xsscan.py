@@ -15,6 +15,7 @@ print(Style.BRIGHT)# On met le style en brillant
 
 # Options de chrome
 chrome_options = Options()
+chrome_options.add_argument('--no-sandbox')# Fix linux
 chrome_options.add_argument('--headless') # Utilise chrome sans interface graphique
 chrome_options.add_argument('--disable-xss-auditor')# Déactivation de la protection XSS
 chrome_options.add_argument('--disable-web-security')# Déactivation de la sécurité web
