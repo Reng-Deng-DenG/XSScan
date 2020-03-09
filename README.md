@@ -1,7 +1,7 @@
 XSScan
 -------------------------------------------------------------------------------------
 
-XSScan is a simple XSS scanner reflected
+XSScan is a simple XSS reflected
 -------------------------------------------------------------------------------------
 Compatibility Linux && Windows
 -------------------------------------------------------------------------------------
@@ -55,7 +55,11 @@ driver = webdriver.Chrome(executable_path="C:\\\Users\\\lucas-pc\\\Desktop\\\XSS
 
 3) Start XSScan
 
-- sudo python3 xsscan.py
+- python xsscan.py
+
+
+
+
 
 
 
