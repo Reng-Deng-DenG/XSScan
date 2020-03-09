@@ -24,7 +24,7 @@ sudo chmod -R 777 XSScan/
 
 3) Give chromedriver right
 
-sudo chmod -R 777 /usr/bin/chromedriver
+sudo chmod 777 /usr/bin/chromedriver
 
 4) Edit chromedriver path in xsscan.py at line 30
 
