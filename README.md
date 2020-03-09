@@ -39,6 +39,21 @@ driver = webdriver.Chrome(executable_path="/usr/bin/chromedriver", options=chrom
 - sudo python3 xsscan.py
 
 
+Windows installation
+
+1) Download chromedriver
+
+- Lien de téléchargement https://chromedriver.chromium.org/downloads
+
+2) Edit chromedriver path in xsscan.py at line 30
+
+driver = webdriver.Chrome(executable_path="C:\\Users\\lucas-pc\\Desktop\\XSScan\\phantomjs.exe", options=chrome_options)
+
+3) Start XSScan
+
+- sudo python3 xsscan.py
+
+
 
 
 
